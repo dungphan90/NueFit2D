@@ -265,6 +265,10 @@ class NueFit2D: public TObject {
     }
 
     // Improvements on TMinuit fit
+    bool mNormalOrdering;
+    void SetInvertedMassOrdering() { mNormalOrdering = false; }
+    bool mLower32Octant;
+    void SetUpperOctantTheta32() { mLower32Octant = false; }
     bool fStatOnlyFit;
     void SetStatOnlyFit() {fStatOnlyFit = true;}
     bool TMinuitWithOscillationParams;

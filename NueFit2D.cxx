@@ -79,6 +79,8 @@ NueFit2D::NueFit2D()
   DisappCalc.SetDataFit(true);
 
   fStatOnlyFit = false;
+  mNormalOrdering = true;
+  mLower32Octant = true;
 
   TMinuitWithOscillationParams = false;
   fTMinuitTheta13ParID = -1;
@@ -6604,13 +6606,13 @@ void NueFit2D::Run2DSterileSlice_Ana2021(double dmsq41, double ssqth14, double s
 
   double Theta14_here = TMath::ASin(TMath::Sqrt(ssqth14));
   double Theta24_here = TMath::ASin(TMath::Sqrt(ssqth24));
-  std::string FitType;
-  if (mDoCombineFit) {
-    FitType = "NumuNue";
-  } else {
-    FitType = "NueOnly";
-  }
-  TFile* outfile = new TFile(Form("%s_%1.5f_%1.5f_%1.5f.root", FitType.c_str(), dmsq41, ssqth14, ssqth24), "RECREATE");
+
+  std::string FitType = mDoCombineFit ? "NumuNue" : "NueOnly";
+  std::string SystematicsFitType = fStatOnlyFit ? "StatOnly" : "StatSyst";
+  std::string OctantStr = mLower32Octant ? "LowerOctant" : "UpperOctant";
+  std::string MassOrderingStr = mNormalOrdering ? "NormalOrdering" : "InvertedOrdering";
+
+  TFile* outfile = new TFile(Form("%s_%s_%1.5f_%1.5f_%1.5f.%s.%s.root", FitType.c_str(), SystematicsFitType.c_str(), dmsq41, ssqth14, ssqth24, OctantStr.c_str(), MassOrderingStr.c_str()), "RECREATE");
   TGraph2D* chiGr = new TGraph2D();
   chiGr->SetName("Chi2");
   chiGr->SetPoint(0, ssqth14, ssqth24, chi);
